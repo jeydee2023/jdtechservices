@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JDTECH I.T SERVICES - Products & Solutions</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            cyan: '#00F0FF',
+                            blue: '#0072FF',
+                            dark: '#0d0e12',
+                            card: '#161822',
+                            accent: '#1f2233'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Paystack Inline JS SDK -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+
+    <!-- Firebase App, Analytics & Firestore Modular SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-analytics.js";
+        import { getFirestore, collection, getDocs, setDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDVJidac5-VhNs8022_iDb72Mmbop1BTPY",
+            authDomain: "jdtechdata.firebaseapp.com",
+            projectId: "jdtechdata",
+            storageBucket: "jdtechdata.firebasestorage.app",
+            messagingSenderId: "302648334350",
+            appId: "1:302648334350:web:6c9197f96747da4104045f",
+            measurementId: "G-51FXGHZ44C"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+
+        // Expose to global window scope for the app
+        window.db = db;
+        window.firebaseMethods = { collection, getDocs, setDoc, doc, deleteDoc };
+        
+        // Signal that Firebase is initialized
+        window.dispatchEvent(new Event('firebase-ready'));
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d0e12;
+            color: #f3f4f6;
+        }
+        .glow-cyan {
+            box-shadow: 0 0 25px -5px rgba(0, 240, 255, 0.25);
+        }
+        .bg-grid-pattern {
+            background-image: radial-gradient(rgba(0, 240, 255, 0.08) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d0e12;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2233;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00F0FF;
+        }
+    </style>
+</head>
+<body class="bg-grid-pattern min-h-screen flex flex-col justify-between selection:bg-brand-cyan selection:text-black">
+
+    <!-- HEADER / NAVBAR -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-[#0d0e12]/80 border-b border-gray-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                <div class="w-11 h-11 bg-gradient-to-tr from-brand-blue to-brand-cyan rounded-xl flex items-center justify-center font-black text-black text-xl shadow-lg shadow-brand-cyan/20 transform hover:rotate-3 transition-transform">
+                    JD
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-1.5">
+                        JDTECH <span class="text-brand-cyan">I.T SERVICES</span>
+                    </h1>
+                    <p class="text-xs text-gray-400 font-medium">Software, Hardware & Digital Solutions</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3 sm:space-x-4">
+                <a href="#products" class="hidden md:flex items-center space-x-1 text-sm font-semibold text-gray-300 hover:text-brand-cyan transition-colors px-3 py-2">
+                    <i data-lucide="laptop" class="w-4 h-4"></i>
+                    <span>Products</span>
+                </a>
+                <a href="https://wa.me/233556675828" target="_blank" class="hidden sm:flex items-center space-x-1.5 text-xs font-bold text-green-400 bg-green-950/50 border border-green-800/60 hover:bg-green-900/60 transition-all px-3 py-2 rounded-lg">
+                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                    <span>0556675828</span>
+                </a>
+                <button onclick="openAdminModal()" class="flex items-center space-x-1.5 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs sm:text-sm font-semibold px-3 sm:px-4 py-2.5 rounded-xl border border-gray-700 transition-all shadow-sm active:scale-95">
+                    <i data-lucide="shield-lock" class="w-4 h-4 text-brand-cyan"></i>
+                    <span>Admin</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative pt-10 pb-12 sm:pt-16 sm:pb-20 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-cyan/10 border border-brand-cyan/30 text-brand-cyan text-xs font-bold mb-6 animate-pulse">
+                <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+                <span>Premium Tech Products & Professional Services</span>
+            </div>
+
+            <h2 class="text-4xl sm:text-6xl font-black text-white tracking-tight mb-4 max-w-4xl mx-auto leading-tight">
+                Empowering Your Digital Life. <br class="hidden sm:block"/>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan via-cyan-200 to-blue-500">Quality Tech, Honest Prices.</span>
+            </h2>
+
+            <p class="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto mb-8 font-normal leading-relaxed">
+                Browse our catalog of laptops, software tools, accessories, and professional I.T services. Secure online payment via Paystack or direct WhatsApp orders!
+            </p>
+
+            <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs sm:text-sm font-semibold text-gray-300">
+                <div class="flex items-center space-x-2 bg-brand-card/80 px-4 py-2 rounded-lg border border-gray-800">
+                    <i data-lucide="check-circle" class="w-4 h-4 text-brand-cyan"></i>
+                    <span>Verified Products</span>
+                </div>
+                <div class="flex items-center space-x-2 bg-brand-card/80 px-4 py-2 rounded-lg border border-gray-800">
+                    <i data-lucide="truck" class="w-4 h-4 text-brand-cyan"></i>
+                    <span>Fast Delivery</span>
+                </div>
+                <div class="flex items-center space-x-2 bg-brand-card/80 px-4 py-2 rounded-lg border border-gray-800">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-brand-cyan"></i>
+                    <span>100% Safe Payments</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRODUCTS STOREFRONT SECTION -->
+    <main id="products" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 flex-grow">
+        <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-8 pb-4 border-b border-gray-800 gap-4">
+            <div>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2">
+                    <i data-lucide="shopping-bag" class="w-7 h-7 text-brand-cyan"></i>
+                    Featured Products & Services
+                </h3>
+                <p class="text-gray-400 text-sm mt-1">Select an item below to purchase or request service.</p>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div id="products-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dynamic product cards loaded here -->
+        </div>
+    </main>
+
+    <!-- ORDER PREPARATION / CUSTOMER INFORMATION MODAL -->
+    <div id="order-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
+        <div class="bg-brand-card border border-gray-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative transform transition-all scale-95 opacity-0" id="order-modal-content">
+            <button onclick="closeOrderModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white p-2 rounded-xl hover:bg-gray-800 transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-brand-cyan/20 text-brand-cyan rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">Complete Your Order</h3>
+                <p class="text-xs text-gray-400 mt-1">Provide your details to process payment.</p>
+            </div>
+
+            <div class="bg-gray-900/90 rounded-xl p-4 border border-gray-800 mb-5 flex items-center gap-3">
+                <img id="modal-product-img" src="" class="w-16 h-16 object-cover rounded-lg border border-gray-800 bg-black" alt="">
+                <div class="flex-grow">
+                    <span id="modal-product-name" class="text-base font-black text-white block">--</span>
+                    <span id="modal-product-price" class="text-lg font-black text-brand-cyan block">GHS 0</span>
+                </div>
+            </div>
+
+            <div class="space-y-3 mb-6">
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1">
+                        Full Name <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="customer-name" placeholder="Enter your full name" 
+                           class="w-full bg-black/60 border border-gray-700 rounded-xl px-4 py-2.5 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-brand-cyan transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1">
+                        Phone Number <span class="text-red-500">*</span>
+                    </label>
+                    <input type="tel" id="customer-phone" placeholder="e.g. 0556675828" 
+                           class="w-full bg-black/60 border border-gray-700 rounded-xl px-4 py-2.5 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-brand-cyan transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1">
+                        Email Address (Optional)
+                    </label>
+                    <input type="email" id="customer-email" placeholder="for receipt delivery" 
+                           class="w-full bg-black/60 border border-gray-700 rounded-xl px-4 py-2.5 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-brand-cyan transition-all">
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <button onclick="processCheckout('paystack')" class="w-full bg-gradient-to-r from-brand-blue to-brand-cyan hover:opacity-90 text-black font-extrabold py-3.5 px-4 rounded-xl shadow-lg shadow-brand-cyan/10 flex items-center justify-center space-x-2 transition-all active:scale-[0.98]">
+                    <i data-lucide="credit-card" class="w-5 h-5"></i>
+                    <span>Pay with Paystack (Online)</span>
+                </button>
+                <button onclick="processCheckout('whatsapp')" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3.5 px-4 rounded-xl flex items-center justify-center space-x-2 transition-all active:scale-[0.98]">
+                    <i data-lucide="message-square" class="w-5 h-5"></i>
+                    <span>Order via WhatsApp Chat</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN AUTH & DASHBOARD MODAL -->
+    <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md hidden">
+        <div class="bg-brand-card border border-gray-800 rounded-2xl max-w-4xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] flex flex-col">
+            <button onclick="closeAdminModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white p-2 rounded-xl hover:bg-gray-800 transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <!-- STEP 1: PASSWORD LOGIN -->
+            <div id="admin-login-view" class="py-8 max-w-md mx-auto w-full text-center">
+                <div class="w-14 h-14 bg-brand-cyan/10 text-brand-cyan rounded-2xl flex items-center justify-center mx-auto mb-4 border border-brand-cyan/20">
+                    <i data-lucide="lock" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-black text-white">Admin Dashboard Login</h3>
+                <p class="text-xs text-gray-400 mt-1 mb-6">Enter your security PIN to manage products & pricing.</p>
+
+                <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                    <div class="relative">
+                        <input type="password" id="admin-pin-input" maxlength="8" placeholder="Enter Admin PIN" 
+                               class="w-full bg-black/60 border border-gray-700 rounded-xl px-4 py-3.5 text-center text-xl font-mono tracking-widest text-brand-cyan placeholder-gray-600 focus:outline-none focus:border-brand-cyan transition-all">
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-brand-blue to-brand-cyan text-black font-extrabold py-3.5 rounded-xl hover:opacity-90 transition-all">
+                        Authenticate PIN
+                    </button>
+                </form>
+            </div>
+
+            <!-- STEP 2: ADMIN PANEL (LOGGED IN) -->
+            <div id="admin-dashboard-view" class="hidden flex-col h-full overflow-hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-gray-800 gap-3">
+                    <div>
+                        <span class="text-xs font-bold text-brand-cyan uppercase tracking-widest">Control Panel</span>
+                        <h3 class="text-xl font-black text-white">JDTECH Products & Services Manager</h3>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="resetProductsToDefault()" class="text-xs bg-red-950/60 text-red-400 hover:bg-red-900/60 border border-red-800/80 font-bold px-3 py-2 rounded-xl transition-all flex items-center gap-1">
+                            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                            <span>Reset Defaults</span>
+                        </button>
+                        <button onclick="logoutAdmin()" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold px-3 py-2 rounded-xl transition-all">
+                            Logout
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ADD PRODUCT FORM -->
+                <div class="bg-gray-900/90 p-4 rounded-xl border border-gray-800 my-4">
+                    <h4 class="text-xs font-bold text-gray-300 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                        <i data-lucide="plus-circle" class="w-4 h-4 text-brand-cyan"></i> Add New Product / Service
+                    </h4>
+                    <form onsubmit="handleAddProduct(event)" class="space-y-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <input type="text" id="new-title" placeholder="Product Title (e.g. Web Design Service)" required class="bg-black/60 border border-gray-700 text-white text-xs rounded-lg p-2.5 focus:border-brand-cyan outline-none">
+                            <input type="number" step="0.1" id="new-price" placeholder="Price (GHS)" required class="bg-black/60 border border-gray-700 text-white text-xs rounded-lg p-2.5 focus:border-brand-cyan outline-none">
+                        </div>
+                        <input type="url" id="new-image" placeholder="Image URL (http://... or upload below)" class="w-full bg-black/60 border border-gray-700 text-white text-xs rounded-lg p-2.5 focus:border-brand-cyan outline-none">
+                        
+                        <div class="flex items-center gap-3">
+                            <label class="cursor-pointer bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold px-3 py-2 rounded-lg border border-gray-700 transition-colors flex items-center gap-1">
+                                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                                <span>Upload File</span>
+                                <input type="file" id="new-image-file" accept="image/*" onchange="handleImageUpload(event)" class="hidden">
+                            </label>
+                            <span id="upload-status" class="text-xs text-gray-400 italic">Optional: Select image from computer</span>
+                        </div>
+
+                        <textarea id="new-description" placeholder="Product description & features..." rows="2" required class="w-full bg-black/60 border border-gray-700 text-white text-xs rounded-lg p-2.5 focus:border-brand-cyan outline-none resize-none"></textarea>
+                        
+                        <button type="submit" class="w-full bg-gradient-to-r from-brand-blue to-brand-cyan text-black font-extrabold text-xs rounded-lg p-3 transition-all hover:opacity-90">
+                            + Publish Product
+                        </button>
+                    </form>
+                </div>
+
+                <!-- TABLE LIST OF PRODUCTS -->
+                <div class="overflow-y-auto flex-grow pr-1">
+                    <table class="w-full text-left text-xs sm:text-sm">
+                        <header class="text-xs text-gray-400 uppercase bg-gray-900/80 sticky top-0 border-b border-gray-800">
+                            <tr>
+                                <th class="p-3">Preview</th>
+                                <th class="p-3">Title</th>
+                                <th class="p-3">Description</th>
+                                <th class="p-3">Price (GHS)</th>
+                                <th class="p-3 text-center">Action</th>
+                            </tr>
+                        </header>
+                        <tbody id="admin-products-tbody" class="divide-y divide-gray-800">
+                            <!-- Admin table rows rendered dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUCCESS NOTIFICATION / RECEIPT MODAL -->
+    <div id="success-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
+        <div class="bg-brand-card border border-gray-800 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl">
+            <div class="w-16 h-16 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-500/30">
+                <i data-lucide="check" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-2xl font-black text-white mb-1">Payment Successful!</h3>
+            <p class="text-xs text-gray-400 mb-6">Your order has been recorded and verified.</p>
+
+            <div class="bg-gray-900 rounded-xl p-4 text-left text-xs space-y-2 border border-gray-800 mb-6">
+                <div class="flex justify-between"><span class="text-gray-400">Reference:</span> <span id="receipt-ref" class="font-mono text-white">--</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Customer:</span> <span id="receipt-name" class="font-bold text-white">--</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Item:</span> <span id="receipt-item" class="font-bold text-brand-cyan">--</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Amount Paid:</span> <span id="receipt-amount" class="font-bold text-white">--</span></div>
+            </div>
+
+            <button onclick="closeSuccessModal()" class="w-full bg-gradient-to-r from-brand-blue to-brand-cyan text-black font-extrabold py-3 rounded-xl hover:opacity-90 transition-all">
+                Done & Return
+            </button>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+    <!-- FOOTER -->
+    <footer class="bg-black border-t border-gray-900 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="text-center md:text-left">
+                <div class="flex items-center justify-center md:justify-start space-x-2 mb-2">
+                    <div class="w-7 h-7 bg-gradient-to-tr from-brand-blue to-brand-cyan rounded-lg flex items-center justify-center font-black text-black text-xs">
+                        JD
+                    </div>
+                    <span class="font-black text-lg text-white">JDTECH I.T SERVICES</span>
+                </div>
+                <p class="text-xs text-gray-500">Professional IT Solutions, Web Development & Quality Hardware.</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center gap-4 text-xs text-gray-400">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="phone-call" class="w-4 h-4 text-brand-cyan"></i>
+                    <span>Contact / WhatsApp: <strong class="text-white">0556675828</strong></span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-green-400"></i>
+                    <span>Paystack Secured</span>
+                </div>
+            </div>
+
+            <div class="text-center md:text-right text-xs text-gray-600">
+                &copy; <span id="year"></span> JDTECH I.T SERVICES. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // DEFAULT INITIAL PRODUCTS (Fallback & initial setup)
+        const DEFAULT_PRODUCTS = [
+            {
+                id: 'prod_1',
+                title: 'Professional Web Development',
+                price: 1500,
+                description: 'Custom responsive website build with modern UI, database integration, and payment gateway setup.',
+                image: 'https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'prod_2',
+                title: 'IT Hardware & PC Maintenance',
+                price: 250,
+                description: 'Full system diagnostic, SSD upgrades, thermal repasting, OS optimization, and virus removal.',
+                image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'prod_3',
+                title: 'Graphic Design & Branding Package',
+                price: 400,
+                description: 'High quality logo design, social media flyers, business cards, and brand identity assets.',
+                image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=80'
+            }
+        ];
+
+        // CONFIG & STATE
+        const ADMIN_PIN = "3940";
+        const PAYSTACK_PUBLIC_KEY = "pk_live_d2488f6e90779beed64a0c776fc3d71aa422e6d4";
+        const WHATSAPP_NUMBER = "0556675828";
+        
+        let products = [];
+        let selectedProduct = null;
+        let isAdminLoggedIn = false;
+
+        // Initialize App once Firebase connects
+        window.addEventListener('firebase-ready', () => {
+            loadProducts();
+        });
+
+        // Fallback initialization if firebase-ready event misses
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            document.getElementById('year').textContent = new Date().getFullYear();
+        });
+
+        // LOAD PRODUCTS FROM FIREBASE CLOUD DATABASE
+        async function loadProducts() {
+            try {
+                const { collection, getDocs } = window.firebaseMethods;
+                const querySnapshot = await getDocs(collection(window.db, "products"));
+                
+                products = [];
+                querySnapshot.forEach((document) => {
+                    products.push({ id: document.id, ...document.data() });
+                });
+
+                // Seed defaults if database is empty
+                if (products.length === 0) {
+                    products = [...DEFAULT_PRODUCTS];
+                    for (let p of products) {
+                        await saveProductToCloud(p);
+                    }
+                }
+                
+                renderProducts();
+            } catch (err) {
+                console.error("Error loading from Firebase:", err);
+                showToast("Loaded local catalog", "info");
+                products = [...DEFAULT_PRODUCTS];
+                renderProducts();
+            }
+        }
+
+        // SAVE PRODUCT TO FIREBASE CLOUD
+        async function saveProductToCloud(product) {
+            try {
+                const { doc, setDoc } = window.firebaseMethods;
+                await setDoc(doc(window.db, "products", product.id), {
+                    title: product.title,
+                    price: Number(product.price),
+                    description: product.description,
+                    image: product.image
+                });
+            } catch (err) {
+                console.error("Error saving to Firebase:", err);
+            }
+        }
+
+        // DELETE PRODUCT FROM FIREBASE CLOUD
+        async function deleteProductFromCloud(id) {
+            try {
+                const { doc, deleteDoc } = window.firebaseMethods;
+                await deleteDoc(doc(window.db, "products", id));
+                showToast("Product removed", "info");
+            } catch (err) {
+                console.error("Error deleting from Firebase:", err);
+                showToast("Failed to delete", "error");
+            }
+        }
+
+        // RENDER PRODUCTS STOREFRONT
+        function renderProducts() {
+            const container = document.getElementById('products-container');
+            container.innerHTML = '';
+
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = "bg-brand-card rounded-2xl border border-gray-800 flex flex-col justify-between overflow-hidden hover:border-brand-cyan/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-cyan/5 group";
+                
+                card.innerHTML = `
+                    <div>
+                        <div class="h-48 overflow-hidden relative bg-black/40">
+                            <img src="${product.image || 'https://via.placeholder.com/600x400?text=JDTECH+IT'}" 
+                                 alt="${product.title}" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                 onerror="this.src='https://via.placeholder.com/600x400?text=JDTECH+IT'">
+                            <div class="absolute inset-0 bg-gradient-to-t from-brand-card via-transparent to-transparent"></div>
+                            <span class="absolute top-3 right-3 bg-brand-cyan/10 backdrop-blur-md border border-brand-cyan/30 text-brand-cyan font-black text-xs px-3 py-1 rounded-full uppercase tracking-wider">
+                                GHS ${product.price}
+                            </span>
+                        </div>
+
+                        <div class="p-5">
+                            <h4 class="text-xl font-bold text-white tracking-tight group-hover:text-brand-cyan transition-colors mb-2">
+                                ${product.title}
+                            </h4>
+                            <p class="text-xs text-gray-400 font-normal leading-relaxed line-clamp-3">
+                                ${product.description}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="p-5 pt-0">
+                        <div class="bg-black/40 rounded-xl p-3 border border-gray-800/80 mb-4 flex items-center justify-between">
+                            <span class="text-xs font-semibold text-gray-400">Price:</span>
+                            <span class="text-xl font-black text-brand-cyan">GHS ${product.price}</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <button onclick="openOrderModal('${product.id}', 'whatsapp')" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-3 rounded-xl text-xs flex items-center justify-center space-x-1.5 transition-all active:scale-95 border border-gray-700">
+                                <i data-lucide="message-square" class="w-4 h-4 text-green-400"></i>
+                                <span>WhatsApp</span>
+                            </button>
+                            <button onclick="openOrderModal('${product.id}', 'paystack')" class="w-full bg-gradient-to-r from-brand-blue to-brand-cyan hover:opacity-90 text-black font-extrabold py-3 px-3 rounded-xl text-xs flex items-center justify-center space-x-1.5 transition-all shadow-md active:scale-95">
+                                <i data-lucide="zap" class="w-4 h-4 fill-black"></i>
+                                <span>Buy Now</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            lucide.createIcons();
+        }
+
+        // HANDLE IMAGE UPLOAD AND CONVERT TO BASE64
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (file.size > 2 * 1024 * 1024) {
+                showToast("File size too large (Max 2MB)", "error");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                document.getElementById('new-image').value = evt.target.result;
+                document.getElementById('upload-status').textContent = `Uploaded: ${file.name}`;
+                document.getElementById('upload-status').className = "text-xs text-green-400 font-semibold";
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // MODAL HANDLERS
+        function openOrderModal(productId) {
+            selectedProduct = products.find(p => p.id === productId);
+            if (!selectedProduct) return;
+
+            document.getElementById('modal-product-name').textContent = selectedProduct.title;
+            document.getElementById('modal-product-price').textContent = `GHS ${selectedProduct.price}`;
+            document.getElementById('modal-product-img').src = selectedProduct.image || 'https://via.placeholder.com/600x400?text=JDTECH';
+
+            const modal = document.getElementById('order-modal');
+            const content = document.getElementById('order-modal-content');
+            modal.classList.remove('hidden');
+            
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeOrderModal() {
+            const modal = document.getElementById('order-modal');
+            const content = document.getElementById('order-modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        function openAdminModal() {
+            const modal = document.getElementById('admin-modal');
+            modal.classList.remove('hidden');
+            if (isAdminLoggedIn) {
+                showAdminDashboard();
+            } else {
+                document.getElementById('admin-login-view').classList.remove('hidden');
+                document.getElementById('admin-dashboard-view').classList.add('hidden');
+                document.getElementById('admin-dashboard-view').classList.remove('flex');
+            }
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.add('hidden');
+        }
+
+        // ADMIN ACTIONS
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const pin = document.getElementById('admin-pin-input').value;
+            if (pin === ADMIN_PIN) {
+                isAdminLoggedIn = true;
+                showAdminDashboard();
+                showToast("Admin access granted", "success");
+            } else {
+                showToast("Invalid Admin PIN", "error");
+            }
+        }
+
+        function showAdminDashboard() {
+            document.getElementById('admin-login-view').classList.add('hidden');
+            const dashView = document.getElementById('admin-dashboard-view');
+            dashView.classList.remove('hidden');
+            dashView.classList.add('flex');
+            renderAdminTable();
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            document.getElementById('admin-pin-input').value = '';
+            document.getElementById('admin-login-view').classList.remove('hidden');
+            const dashView = document.getElementById('admin-dashboard-view');
+            dashView.classList.add('hidden');
+            dashView.classList.remove('flex');
+            showToast("Logged out of admin panel", "info");
+        }
+
+        function renderAdminTable() {
+            const tbody = document.getElementById('admin-products-tbody');
+            tbody.innerHTML = '';
+
+            products.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-900/40 transition-colors";
+                tr.innerHTML = `
+                    <td class="p-3">
+                        <img src="${p.image}" class="w-10 h-10 object-cover rounded-lg bg-black border border-gray-800" onerror="this.src='https://via.placeholder.com/100'">
+                    </td>
+                    <td class="p-3 font-bold text-white">${p.title}</td>
+                    <td class="p-3 text-gray-400 max-w-xs truncate">${p.description}</td>
+                    <td class="p-3 font-bold text-brand-cyan">GHS ${p.price}</td>
+                    <td class="p-3 text-center">
+                        <button onclick="removeProduct('${p.id}')" class="text-red-400 hover:text-red-300 p-1.5 bg-red-950/40 rounded-lg border border-red-800/60 transition-colors">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            lucide.createIcons();
+        }
+
+        async function handleAddProduct(e) {
+            e.preventDefault();
+            const title = document.getElementById('new-title').value.trim();
+            const price = Number(document.getElementById('new-price').value);
+            const image = document.getElementById('new-image').value.trim() || 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80';
+            const description = document.getElementById('new-description').value.trim();
+
+            const newProduct = {
+                id: 'prod_' + Date.now(),
+                title,
+                price,
+                image,
+                description
+            };
+
+            products.push(newProduct);
+            await saveProductToCloud(newProduct);
+
+            // Reset form
+            document.getElementById('new-title').value = '';
+            document.getElementById('new-price').value = '';
+            document.getElementById('new-image').value = '';
+            document.getElementById('new-description').value = '';
+            document.getElementById('upload-status').textContent = 'Optional: Select image from computer';
+            document.getElementById('upload-status').className = 'text-xs text-gray-400 italic';
+
+            renderAdminTable();
+            renderProducts();
+            showToast("Product published successfully!", "success");
+        }
+
+        async function removeProduct(id) {
+            if (!confirm("Are you sure you want to delete this product?")) return;
+            products = products.filter(p => p.id !== id);
+            await deleteProductFromCloud(id);
+            renderAdminTable();
+            renderProducts();
+        }
+
+        async function resetProductsToDefault() {
+            if (!confirm("Reset all products to initial defaults?")) return;
+            for (let p of products) {
+                await deleteProductFromCloud(p.id);
+            }
+            products = [...DEFAULT_PRODUCTS];
+            for (let p of products) {
+                await saveProductToCloud(p);
+            }
+            renderAdminTable();
+            renderProducts();
+            showToast("Reset to default products", "info");
+        }
+
+        // PROCESS CHECKOUT (PAYSTACK OR WHATSAPP)
+        function processCheckout(method) {
+            if (!selectedProduct) return;
+
+            const name = document.getElementById('customer-name').value.trim();
+            const phone = document.getElementById('customer-phone').value.trim();
+            const email = document.getElementById('customer-email').value.trim() || 'customer@jdtech.com';
+
+            if (!name || !phone) {
+                showToast("Please enter your name and phone number.", "error");
+                return;
+            }
+
+            if (method === 'whatsapp') {
+                const message = `Hello JDTECH I.T SERVICES,\n\nI want to purchase:\n📦 *Item:* ${selectedProduct.title}\n💰 *Price:* GHS ${selectedProduct.price}\n👤 *Customer:* ${name}\n📞 *Phone:* ${phone}`;
+                const encodedMsg = encodeURIComponent(message);
+                window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMsg}`, '_blank');
+                closeOrderModal();
+                return;
+            }
+
+            if (method === 'paystack') {
+                const handler = PaystackPop.setup({
+                    key: PAYSTACK_PUBLIC_KEY,
+                    email: email,
+                    amount: selectedProduct.price * 100, // In pesewas
+                    currency: 'GHS',
+                    ref: 'JDTECH_' + Math.floor((Math.random() * 1000000000) + 1),
+                    metadata: {
+                        custom_fields: [
+                            { display_name: "Customer Name", variable_name: "customer_name", value: name },
+                            { display_name: "Phone Number", variable_name: "phone_number", value: phone },
+                            { display_name: "Item", variable_name: "item_title", value: selectedProduct.title }
+                        ]
+                    },
+                    callback: function(response) {
+                        closeOrderModal();
+                        showSuccessReceipt(response.reference, name, selectedProduct.title, selectedProduct.price);
+                    },
+                    onClose: function() {
+                        showToast("Payment window closed", "info");
+                    }
+                });
+                handler.openIframe();
+            }
+        }
+
+        function showSuccessReceipt(ref, name, item, amount) {
+            document.getElementById('receipt-ref').textContent = ref;
+            document.getElementById('receipt-name').textContent = name;
+            document.getElementById('receipt-item').textContent = item;
+            document.getElementById('receipt-amount').textContent = `GHS ${amount}`;
+
+            const modal = document.getElementById('success-modal');
+            modal.classList.remove('hidden');
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('success-modal').classList.add('hidden');
+        }
+
+        // UTILITY TOAST NOTIFICATIONS
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const bgClass = type === 'success' ? 'bg-green-900/90 border-green-700 text-green-200' :
+                           type === 'error' ? 'bg-red-900/90 border-red-700 text-red-200' :
+                           'bg-gray-800/90 border-gray-700 text-gray-200';
+
+            toast.className = `px-4 py-3 rounded-xl border backdrop-blur-md text-xs font-semibold shadow-lg transition-all transform translate-y-2 opacity-0 pointer-events-auto flex items-center space-x-2 ${bgClass}`;
+            toast.innerHTML = `<span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
